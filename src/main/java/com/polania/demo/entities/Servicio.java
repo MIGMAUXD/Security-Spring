@@ -41,5 +41,8 @@ public class Servicio {
 	private String diagnostico;
 	private boolean tiempo;
 	private String demora;
-
+	private String tipoServicio;
+	private Integer manoObra;
+	
+	
 }
