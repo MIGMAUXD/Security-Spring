@@ -43,9 +43,7 @@ public class Servicio {
 	private String diagnostico;
 	private boolean tiempo;
 	private String demora;
-	@ManyToOne
-	@JoinColumn(name = "tipo_servicio_id") // El nombre de la columna en la tabla de servicios que contiene el ID del tipo de servicio
-	private TipoServicio tipoServicio;
+	private String tipoServicio;
 	private Integer manoObra;
 	
 	
