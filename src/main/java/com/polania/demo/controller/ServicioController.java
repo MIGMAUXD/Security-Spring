@@ -1,8 +1,12 @@
 package com.polania.demo.controller;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +45,32 @@ public class ServicioController {
         List<Servicio> servicios = servicioRepository.findAll();
         return ResponseEntity.ok(servicios);
     }
+    
+    
+    /**
+     * Obtiene los servicios para el día actual.
+     * @return ResponseEntity con la lista de servicios para el día actual y el código de estado correspondiente.
+     */
+    @GetMapping("/dia")
+    public ResponseEntity<List<Servicio>> getServiciosDelDia() {
+        LocalDateTime fechaYHoraActual = LocalDateTime.now();
+        LocalDate fechaActual = fechaYHoraActual.toLocalDate();
+        LocalTime horaActual = fechaYHoraActual.toLocalTime();
+        
+        List<Servicio> serviciosDelDia = servicioRepository.findAll()
+                .stream()
+                .filter(servicio -> {
+                    LocalDate fechaServicio = servicio.getFechaHora().toLocalDate();
+                    LocalTime horaServicio = servicio.getFechaHora().toLocalTime();
+                    return fechaServicio.equals(fechaActual) && horaServicio.isBefore(horaActual.plusHours(1)); // Se agrega 1 hora al rango para incluir los servicios del último intervalo
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(serviciosDelDia);
+    }
+
+    
+    
 
     /**
      * Obtiene un servicio por su ID.
